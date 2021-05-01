@@ -1,9 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const Cowork = require('../models/cowork')
+const {Cowork, validateCowork} = require('../models/cowork')
 
 // POST : CREATE A NEW COWORKING SPACE DATA
-router.post('/', (req,res) => {
+router.post('/', async (req,res) => {
+    const error = await validateCowork(req.body);
+
+    if(error.message) res.status(400).send(error.message);
+
     cowork = new Cowork({
         name: req.body.name,
         image: req.body.image,

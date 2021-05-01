@@ -1,11 +1,13 @@
 const mongoose = require('mongoose')
-
+const yup = require('yup');
 
 // COWORKING SCHEMA
 const coworkSchema = mongoose.Schema({
     name : {
         type: String,
-        required : true
+        required : true,
+        minlength: 3,
+        maxlength:100
     },
     image : {
         type: String,
@@ -14,8 +16,6 @@ const coworkSchema = mongoose.Schema({
     price : {
         type: Number,
         required : true,
-        minlength: 3,
-        maxlength: 10
     },
     address : {
         type: String,
@@ -35,15 +35,12 @@ const coworkSchema = mongoose.Schema({
     },
     phone : {
         type: String,
-        required : false
     },
     open : {
         type: String,
-        required : false
     },
     close : {
         type: String,
-        required : false
     },
     region : {
         latitude: {
@@ -57,4 +54,30 @@ const coworkSchema = mongoose.Schema({
     }
 })
 
-module.exports = new mongoose.model('Cowork', coworkSchema)
+const validateCowork = cowork => {
+    const schema = yup.object().shape({
+        name: yup.string().required().min(3).max(100),
+        image: yup.string().required(),
+        price: yup.number().required(),
+        address: yup.string().required(),
+        district: yup.string().required(),
+        city: yup.string().required(),
+        fasilitas: yup.string().required(),
+        phone: yup.string(),
+        open: yup.string(),
+        close: yup.string(),
+        latitude: yup.number().required(),
+        longitude: yup.number().required(),
+    })
+    return schema
+    .validate(cowork)
+    .then((book) => book)
+    .catch(error => {
+        return {
+            message:error.message
+        }
+    })
+}
+
+exports.Cowork = new mongoose.model('Cowork', coworkSchema);
+exports.validateCowork = validateCowork;
