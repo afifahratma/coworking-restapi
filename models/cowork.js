@@ -71,7 +71,7 @@ const validateCowork = cowork => {
     })
     return schema
     .validate(cowork)
-    .then((book) => book)
+    .then((cowork) => cowork)
     .catch(error => {
         return {
             message:error.message

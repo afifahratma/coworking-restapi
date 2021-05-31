@@ -3,7 +3,9 @@ const mongoose = require("mongoose");
 const winston = require('winston')
 const app = express();
 require('dotenv').config();
-const coworkRoute = require('./routes/coworking')
+const coworkRoute = require('./routes/coworking');
+const bookRoute = require('./routes/bookingroutes');
+const userRoute = require('./routes/auth');
 
 const PORT = process.env.PORT || 3000;
 
@@ -12,7 +14,6 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
 // create a logger
- 
 const logger = winston.createLogger({
   transports: [
     new winston.transports.Console({
@@ -29,6 +30,8 @@ const logger = winston.createLogger({
 
 //routes
 app.use('/api/coworks', coworkRoute);
+app.use('/api/booking', bookRoute);
+app.use('/api/user', userRoute);
 
 
 //connect to mongodb atlas
@@ -39,8 +42,6 @@ mongoose.connect(process.env.MONGO_URL,
   }).catch(error => {
       logger.error("error", error.message);
   })
-
-
 
 //start server
 app.listen(PORT, () => {
